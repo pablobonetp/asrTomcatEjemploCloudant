@@ -21,17 +21,18 @@ import javax.servlet.http.HttpServletResponse;
 import asr.proyectoFinal.dao.CloudantPalabraStore;
 import asr.proyectoFinal.dominio.Palabra;
 
-import asr.proyectoFinal.traductor.Traductor;
 
 /**
  * Servlet implementation class Controller
  */
 @WebServlet(urlPatterns = {"/listar", "/insertar", "/hablar"})
 public class Controller extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
+		
 		PrintWriter out = response.getWriter();
 		out.println("<html><head><meta charset=\"UTF-8\"></head><body>");
 		
