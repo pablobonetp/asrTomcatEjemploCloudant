@@ -7,12 +7,16 @@
 <title>Proyecto ASR new...</title>
 </head>
 <body>
-<h1>Ejemplo de Proyecto de ASR con Cloudant ahora con DevOps</h1>
+<h1>Ejemplo de Proyecto de ASR con Cloudant ahora con DevOps (con DevOps):</h1>
 <hr />
-<p>Opciones sobre la base de datos Cloudant de Pablo Bonet (con DevOps):</p>
+<p>Opciones sobre la base de datos Cloudant de Pablo Bonet </p>
 <ul>
 <li><a href="listar">Listar</a></li>
-<li><a href="insertar?palabra=hola">Insertar</a></li>
+<form onsubmit="insertar?palabra=hola">
+Palabra en español:
+<input type="text" id="palabra" name="palabra"><br>
+<input type="submit" name="Guardar en Cloudant" >
+</form>
 </ul>
 </body>
 </html>
