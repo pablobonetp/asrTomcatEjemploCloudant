@@ -12,7 +12,7 @@
 <p>Opciones sobre la base de datos Cloudant de Pablo Bonet </p>
 <ul>
 <li><a href="listar">Listar</a></li>
-<form action="insertar?palabra=PRUEBA">
+<form action="insertar?palabra">
 Palabra en español:
 <input type="text" id="palabra" name="palabra"><br>
 <input type="submit" value="Guardar en Cloudant" >
