@@ -103,10 +103,12 @@ public class Controller extends HttpServlet {
 			}
 			else
 			model="en-es";
-			Authenticator authenticator = new IamAuthenticator("sGBqIGkLecdsa4RdsA3imHp_lvb7MMlZNzdasq-PgkmCXdsf59P0");
+			//Authenticator authenticator = new IamAuthenticator("sGBqIGkLecdsa4RdsA3imHp_lvb7MMlZNzdasq-PgkmCXdsf59P0");
+			Authenticator authenticator = new IamAuthenticator("i-fU9PnyEySAPFpRbyU6U5Rg29LfAubOHzXeQ281bAn5");
 			LanguageTranslator languageTranslator = new LanguageTranslator("2018-05-01",
 			authenticator);
-			languageTranslator.setServiceUrl("https://gatewaylon.watsonplatform.net/language-translator/api");
+			//languageTranslator.setServiceUrl("https://gatewaylon.watsonplatform.net/language-translator/api");
+			languageTranslator.setServiceUrl("https://api.eu-gb.language-translator.watson.cloud.ibm.com/instances/b741ba34-2c06-4fff-947e-ab347657e65e");
 			TranslateOptions translateOptions = new TranslateOptions.Builder()
 			 .addText(palabra)
 			 .modelId(model)
