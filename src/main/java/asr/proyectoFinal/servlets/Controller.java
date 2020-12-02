@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -30,19 +29,10 @@ import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.language_translator.v3.LanguageTranslator;
 import com.ibm.watson.language_translator.v3.model.TranslateOptions;
 import com.ibm.watson.language_translator.v3.model.TranslationResult;
-//import com.ibm.watson.text_to_speech.v1.model.SynthesizeOptions;
 
 import asr.proyectoFinal.dao.CloudantPalabraStore;
 import asr.proyectoFinal.dominio.Palabra;
 
-import com.ibm.watson.developer_cloud.text_to_speech.v1.TextToSpeech;
-import com.ibm.watson.developer_cloud.text_to_speech.v1.model.Voice;
-import com.ibm.watson.developer_cloud.text_to_speech.v1.util.WaveUtils;
-import com.ibm.watson.developer_cloud.http.HttpMediaType;
-import com.ibm.watson.developer_cloud.speech_to_text.v1.RecognizeOptions;
-import com.ibm.watson.developer_cloud.speech_to_text.v1.SpeechToText;
-import com.ibm.watson.developer_cloud.speech_to_text.v1.model.SpeechResults;
-import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.BaseRecognizeCallback;
 
 
 /**
@@ -90,7 +80,6 @@ public class Controller extends HttpServlet {
 						palabra.setName(translate(parametro,"es","en",false));
 						store.persist(palabra);
 					    out.println(String.format("Almacenada la palabra: %s", palabra.getName()));
-					    speech2text();
 					    //text2speech("1");
 					    
 					}
@@ -108,33 +97,6 @@ public class Controller extends HttpServlet {
 	}
 	
 	@SuppressWarnings("unused")
-	private static void speech2text() throws FileNotFoundException 
-	{
-		SpeechToText service = new SpeechToText();
-		//SpeechResults sr = null;
-		String apiKey = "F5PSSvlC2MyMzzwBpnC0akepeKUEu-ndxQcnvHhssoGg";
-		//service.setUsernameAndPassword("<username>", "<password>");
-		service.setApiKey(apiKey);
-
-		FileInputStream audio = new FileInputStream("speech.wav");
-
-		RecognizeOptions options = new RecognizeOptions.Builder()
-		  .continuous(true)
-		  .interimResults(true)
-		  .contentType(HttpMediaType.AUDIO_FLAC)
-		  .build();
-		
-		service.recognizeUsingWebSocket(audio, options, new BaseRecognizeCallback() {
-			  @Override
-			  public void onTranscription(SpeechResults speechResults) {
-			    System.out.println(speechResults);
-			    SpeechResults sr = speechResults;
-			  }
-			});
-		//return sr.toString();
-	
-	} 
-	
 
 	
 	public static String translate(String palabra, String sourceModel, String destModel,
