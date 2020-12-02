@@ -42,7 +42,7 @@ import asr.proyectoFinal.dominio.Palabra;
 /**
  * Servlet implementation class Controller
  */
-@WebServlet(urlPatterns = {"/listar", "/insertar", "/hablar"})
+@WebServlet(urlPatterns = {"/listar", "/insertar", "/hablar","/text2speech"})
 public class Controller extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
