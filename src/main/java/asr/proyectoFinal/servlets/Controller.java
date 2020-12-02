@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -32,6 +33,7 @@ import asr.proyectoFinal.dominio.Palabra;
 
 import com.ibm.watson.developer_cloud.text_to_speech.v1.TextToSpeech;
 import com.ibm.watson.developer_cloud.text_to_speech.v1.model.SynthesizeOptions;
+import com.ibm.watson.developer_cloud.text_to_speech.v1.model.Voice;
 import com.ibm.watson.developer_cloud.text_to_speech.v1.util.WaveUtils;
 
 
@@ -81,6 +83,53 @@ public class Controller extends HttpServlet {
 						store.persist(palabra);
 					    out.println(String.format("Almacenada la palabra: %s", palabra.getName()));
 					    text2speech("1");
+					    
+							boolean download = "true".equalsIgnoreCase(request.getParameter("download"));
+							InputStream in = null;
+							OutputStream out1 = null;	
+							try {
+						         TextToSpeech textService = new TextToSpeech();
+						         //String voice = request.getParameter("voice");
+						         //String text = request.getParameter("text");
+						        // String format = "audio/ogg; codecs=opus";
+						         //Voice v = new Voice();
+						         //in = textService.synthesize(text, v, format);
+						         
+						         SynthesizeOptions synthesizeOptions =
+						      	       new SynthesizeOptions.Builder()
+						      	         .text("Hello World!")
+						      	         .accept("audio/wav")
+						      	         .voice("en-US_AllisonVoice")
+						      	         .build();
+						         
+						         in = textService.synthesize(synthesizeOptions).execute();
+						         
+						         if (download) {
+						             response.setHeader("content-disposition",
+						                            "attachment; filename=transcript.ogg");
+						         }
+						         
+						         out1 = response.getOutputStream();
+						         byte[] buffer = new byte[2048];
+						         int read;
+						         while ((read = in.read(buffer)) != -1) {
+						             out1.write(buffer, 0, read);
+						         }
+							} catch (Exception e) {
+								// Log something and return an error message
+								e.printStackTrace();
+							}
+					    
+					    
+					    
+					    
+					    
+					    
+					    
+					    
+					    
+					    
+					    
 					}
 				}
 				break;
