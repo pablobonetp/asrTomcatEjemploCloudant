@@ -30,6 +30,10 @@ import com.ibm.watson.language_translator.v3.model.TranslationResult;
 import asr.proyectoFinal.dao.CloudantPalabraStore;
 import asr.proyectoFinal.dominio.Palabra;
 
+import com.ibm.watson.developer_cloud.text_to_speech.v1.TextToSpeech;
+import com.ibm.watson.developer_cloud.text_to_speech.v1.model.SynthesizeOptions;
+import com.ibm.watson.developer_cloud.text_to_speech.v1.util.WaveUtils;
+
 
 /**
  * Servlet implementation class Controller
@@ -75,7 +79,8 @@ public class Controller extends HttpServlet {
 						//palabra.setName(parametro);
 						palabra.setName(translate(parametro,"es","en",false));
 						store.persist(palabra);
-					    out.println(String.format("Almacenada la palabra: %s", palabra.getName()));			    	  
+					    out.println(String.format("Almacenada la palabra: %s", palabra.getName()));
+					    text2speech("1");
 					}
 				}
 				break;
@@ -89,6 +94,43 @@ public class Controller extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
+	
+	public static void text2speech(String args) {
+		//String[] args
+	     TextToSpeech textToSpeech = new TextToSpeech();
+	     textToSpeech.setApiKey("YBK6xNhS-bPWPp_7A7wy72Sf1mVZ9s8orvua5GL3ZxHL");
+	     textToSpeech.setEndPoint("https://api.eu-gb.text-to-speech.watson.cloud.ibm.com/instances/ce925c92-73a4-4f92-82a1-f89f9016e6da");
+	     //textToSpeech.setUsernameAndPassword(username, password);
+
+	     try {
+	       SynthesizeOptions synthesizeOptions =
+	       new SynthesizeOptions.Builder()
+	         .text("Hello World!")
+	         .accept("audio/wav")
+	         .voice("en-US_AllisonVoice")
+	         .build();
+
+	       InputStream inputStream =
+	       textToSpeech.synthesize(synthesizeOptions).execute();
+	       InputStream in = WaveUtils.reWriteWaveHeader(inputStream);
+
+	       OutputStream out = new FileOutputStream("test.wav");
+	       byte[] buffer = new byte[1024];
+	       int length;
+	       while ((length = in.read(buffer)) > 0) {
+	       out.write(buffer, 0, length);
+	       }
+
+	       out.close();
+	       in.close();
+	       inputStream.close();
+	      } catch (IOException e) {
+	        e.printStackTrace();
+	      }
+
+	   }
+	
+
 	
 	public static String translate(String palabra, String sourceModel, String destModel,
 			boolean conversational)
