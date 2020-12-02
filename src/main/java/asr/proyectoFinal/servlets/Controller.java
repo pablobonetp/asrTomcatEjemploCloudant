@@ -15,6 +15,7 @@ import java.nio.Buffer;
 import java.nio.file.Files;
 import java.util.List;
 
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,6 +27,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ibm.cloud.sdk.core.security.Authenticator;
 import com.ibm.cloud.sdk.core.security.IamAuthenticator;
+import com.ibm.watson.developer_cloud.text_to_speech.v1.TextToSpeech;
+import com.ibm.watson.developer_cloud.text_to_speech.v1.model.AudioFormat;
+import com.ibm.watson.developer_cloud.text_to_speech.v1.model.Voice;
 import com.ibm.watson.language_translator.v3.LanguageTranslator;
 import com.ibm.watson.language_translator.v3.model.TranslateOptions;
 import com.ibm.watson.language_translator.v3.model.TranslationResult;
@@ -42,6 +46,7 @@ import asr.proyectoFinal.dominio.Palabra;
 public class Controller extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
+	
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
@@ -84,6 +89,8 @@ public class Controller extends HttpServlet {
 					    
 					}
 				}
+				case "/text2speech":
+					text2speech();
 				break;
 		}
 		out.println("</html>");
@@ -96,8 +103,17 @@ public class Controller extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	@SuppressWarnings("unused")
-
+	public static void text2speech() throws FileNotFoundException
+	{	
+		final String text = "IBM Watson Developer Cloud";
+		TextToSpeech service = new TextToSpeech();
+	    service.setApiKey("F4jIJXlZggSryeWNMuXrtY1sgdo-dSg99_cczg31Yhx5");
+	    
+	    
+	    InputStream result = service.synthesize(text, Voice.EN_LISA, AudioFormat.WAV).execute();
+	    writeInputStreamToOutputStream(result, new FileOutputStream("target/asroutput.wav"));
+	}
+	
 	
 	public static String translate(String palabra, String sourceModel, String destModel,
 			boolean conversational)
@@ -134,5 +150,28 @@ public class Controller extends HttpServlet {
 			traducciones.get(0).getAsJsonObject().get("translation").getAsString();
 			return traduccionPrimera;
 			}
+	
+	private static void writeInputStreamToOutputStream(InputStream inputStream, OutputStream outputStream) {
+	    try {
+	      try {
+	        final byte[] buffer = new byte[1024];
+	        int read;
+
+	        while ((read = inputStream.read(buffer)) != -1) {
+	          outputStream.write(buffer, 0, read);
+	        }
+
+	        outputStream.flush();
+	      } catch (final Exception e) {
+	        e.printStackTrace();
+	      } finally {
+	        outputStream.close();
+	        inputStream.close();
+	      }
+	    } catch (final Exception e) {
+	      e.printStackTrace();
+	    }
+	  }
+
 
 }
