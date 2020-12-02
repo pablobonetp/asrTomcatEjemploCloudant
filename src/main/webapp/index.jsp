@@ -17,6 +17,11 @@
 <input type="text" id="palabra" name="palabra">
 <button type="submit">Guardar en Cloudant</button></li>
 </form>
+<form action="text2speech" method="post">
+<li>Texto: 
+<input type="text" id="texto" name="texto">
+<button type="submit">Convertir</button></li>
+</form>
 </ul>
 </body>
 </html>
