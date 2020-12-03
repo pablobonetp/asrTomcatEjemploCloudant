@@ -21,6 +21,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -42,7 +45,7 @@ import com.ibm.watson.developer_cloud.text_to_speech.v1.util.WaveUtils;
 /**
  * Servlet implementation class Controller
  */
-@WebServlet(urlPatterns = {"/listar", "/insertar", "/hablar","/text2speech"})
+@WebServlet(urlPatterns = {"/listar", "/insertar", "/hablar", "/text2speech"})
 public class Controller extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
@@ -86,12 +89,22 @@ public class Controller extends HttpServlet {
 						store.persist(palabra);
 					    out.println(String.format("Almacenada la palabra: %s", palabra.getName()));
 					    //text2speech("1");
-					    text2speech();
+					    //text2speech();
 					    
 					}
 				}
 				case "/text2speech":
 					text2speech();
+					out.println(String.format("AUDIO: %s"));
+					try {
+						AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("/Users/pablobonet/ASR/testasr.wav").getAbsoluteFile());
+						Clip clip = AudioSystem.getClip();
+						clip.open(audioInputStream);
+						clip.start();
+						} catch(Exception ex) {
+						out.println("Error with playing sound.");
+						ex.printStackTrace();
+						}
 				break;
 		}
 		out.println("</html>");
@@ -104,11 +117,12 @@ public class Controller extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	public static void text2speech() throws FileNotFoundException
+	public static OutputStream text2speech() throws FileNotFoundException
 	{	
 		TextToSpeech textToSpeech = new TextToSpeech();
 		textToSpeech.setApiKey("_BY39GCbpkCbcW09LfMVbvluQtVYU2vDAQ5s1pP1ZKFL");
 	     //textToSpeech.setUsernameAndPassword(username, password);
+		OutputStream out = null;
 
 	     try {
 	       SynthesizeOptions synthesizeOptions =
@@ -122,7 +136,7 @@ public class Controller extends HttpServlet {
 	       textToSpeech.synthesize(synthesizeOptions).execute();
 	       InputStream in = WaveUtils.reWriteWaveHeader(inputStream);
 
-	       OutputStream out = new FileOutputStream("testasr.wav");
+	       out = new FileOutputStream("/Users/pablobonet/ASR/testasr.wav");
 	       byte[] buffer = new byte[1024];
 	       int length;
 	       while ((length = in.read(buffer)) > 0) {
@@ -135,6 +149,7 @@ public class Controller extends HttpServlet {
 	      } catch (IOException e) {
 	        e.printStackTrace();
 	      }
+	     return out;
 	}
 	
 	
