@@ -146,6 +146,9 @@ public class Controller extends HttpServlet {
 			       .text(text)
 			       .features(features)
 			       .build();
+		AnalysisResults response = service
+			       .analyze(parameters)
+			       .execute();
 		return text;
 	}
 	
