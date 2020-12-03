@@ -98,7 +98,9 @@ public class Controller extends HttpServlet {
 					//Palabra palabra1 = new Palabra();
 					//String parametro1 = request.getParameter("palabra");
 					//palabra1.setName(text2speech());
+					String s = text2speech();
 					out.println(String.format("Almacenada la palabra"));
+					out.print(s);
 				break;
 		}
 		out.println("</html>");
