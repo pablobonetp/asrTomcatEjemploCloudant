@@ -103,9 +103,10 @@ public class Controller extends HttpServlet {
 					//Palabra palabra1 = new Palabra();
 					//String parametro1 = request.getParameter("palabra");
 					//palabra1.setName(text2speech());
-					String s = naturalunderstanding();
+					//String s = naturalunderstanding();
+					naturalunderstanding();
 					out.println(String.format("Almacenada la palabra"));
-					out.print(s);
+					//out.print(s);
 				break;
 		}
 		out.println("</html>");
@@ -118,7 +119,7 @@ public class Controller extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	public static String naturalunderstanding() {
+	public static void naturalunderstanding() {
 	
 	/*NaturalLanguageUnderstanding service = new NaturalLanguageUnderstanding(
 	           "2018-03-16",
@@ -165,7 +166,7 @@ public class Controller extends HttpServlet {
 
 	     //print the result
 	     System.out.println(response);
-	     return response.toString();
+	     //return response.toString();
 	     
 		}
 	
