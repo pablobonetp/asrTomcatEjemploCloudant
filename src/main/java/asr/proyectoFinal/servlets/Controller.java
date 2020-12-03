@@ -94,17 +94,10 @@ public class Controller extends HttpServlet {
 					}
 				}
 				case "/text2speech":
-					text2speech();
-					out.println(String.format("AUDIO: %s"));
-					try {
-						AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("/Users/pablobonet/ASR/testasr.wav").getAbsoluteFile());
-						Clip clip = AudioSystem.getClip();
-						clip.open(audioInputStream);
-						clip.start();
-						} catch(Exception ex) {
-						out.println("Error with playing sound.");
-						ex.printStackTrace();
-						}
+					//text2speech();
+					Palabra palabra1 = new Palabra();
+					String parametro1 = request.getParameter("palabra");
+					palabra1.setName(text2speech());
 				break;
 		}
 		out.println("</html>");
@@ -117,8 +110,9 @@ public class Controller extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	public static OutputStream text2speech() throws FileNotFoundException
+	public static String text2speech() throws FileNotFoundException
 	{	
+		String p = "Puerta";
 		TextToSpeech textToSpeech = new TextToSpeech();
 		textToSpeech.setApiKey("_BY39GCbpkCbcW09LfMVbvluQtVYU2vDAQ5s1pP1ZKFL");
 	     //textToSpeech.setUsernameAndPassword(username, password);
@@ -149,7 +143,8 @@ public class Controller extends HttpServlet {
 	      } catch (IOException e) {
 	        e.printStackTrace();
 	      }
-	     return out;
+	     //return out;
+	     return p;
 	}
 	
 	
