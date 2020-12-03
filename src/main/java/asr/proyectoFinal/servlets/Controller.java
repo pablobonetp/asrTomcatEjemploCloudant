@@ -142,6 +142,10 @@ public class Controller extends HttpServlet {
 			       .entities(entitiesOptions)
 			       .keywords(keywordsOptions)
 			       .build();
+		AnalyzeOptions parameters = new AnalyzeOptions.Builder()
+			       .text(text)
+			       .features(features)
+			       .build();
 		return text;
 	}
 	
