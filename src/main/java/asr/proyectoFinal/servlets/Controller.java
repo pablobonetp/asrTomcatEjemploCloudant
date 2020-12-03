@@ -98,7 +98,7 @@ public class Controller extends HttpServlet {
 					//Palabra palabra1 = new Palabra();
 					//String parametro1 = request.getParameter("palabra");
 					//palabra1.setName(text2speech());
-					String s = text2speech();
+					String s = text2speechH();
 					out.println(String.format("Almacenada la palabra"));
 					out.print(s);
 				break;
@@ -112,7 +112,11 @@ public class Controller extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-	
+	public static String text2speechH() throws FileNotFoundException
+	{
+		String p = "Puerta";
+		return p;
+	}
 	public static String text2speech() throws FileNotFoundException
 	{	
 		String p = "Puerta";
