@@ -127,6 +127,12 @@ public class Controller extends HttpServlet {
 		String text = "IBM is an American multinational technology " +
 			       "company headquartered in Armonk, New York, " +
 			       "United States, with operations in over 170 countries.";
+		
+		EntitiesOptions entitiesOptions = new EntitiesOptions.Builder()
+			       .emotion(true)
+			       .sentiment(true)
+			       .limit(2)
+			       .build();
 		return text;
 	}
 	
