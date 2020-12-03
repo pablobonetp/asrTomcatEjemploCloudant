@@ -117,6 +117,12 @@ public class Controller extends HttpServlet {
 		String p = "Puerta";
 		TextToSpeech textToSpeech = new TextToSpeech();
 		textToSpeech.setApiKey("_BY39GCbpkCbcW09LfMVbvluQtVYU2vDAQ5s1pP1ZKFL");
+	    SynthesizeOptions synthesizeOptions =
+	       new SynthesizeOptions.Builder()
+	         .text("Hello World!")
+	         .accept("audio/wav")
+	         .voice("en-US_AllisonVoice")
+	         .build();
 		return p;
 	}
 	public static String text2speech2() throws FileNotFoundException
