@@ -133,6 +133,11 @@ public class Controller extends HttpServlet {
 			       .sentiment(true)
 			       .limit(2)
 			       .build();
+		KeywordsOptions keywordsOptions = new KeywordsOptions.Builder()
+			       .emotion(true)
+			       .sentiment(true)
+			       .limit(2)
+			       .build();
 		return text;
 	}
 	
