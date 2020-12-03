@@ -138,6 +138,10 @@ public class Controller extends HttpServlet {
 			       .sentiment(true)
 			       .limit(2)
 			       .build();
+		Features features = new Features.Builder()
+			       .entities(entitiesOptions)
+			       .keywords(keywordsOptions)
+			       .build();
 		return text;
 	}
 	
