@@ -86,6 +86,7 @@ public class Controller extends HttpServlet {
 						store.persist(palabra);
 					    out.println(String.format("Almacenada la palabra: %s", palabra.getName()));
 					    //text2speech("1");
+					    text2speech();
 					    
 					}
 				}
@@ -134,8 +135,6 @@ public class Controller extends HttpServlet {
 	      } catch (IOException e) {
 	        e.printStackTrace();
 	      }
-
-	
 	}
 	
 	
