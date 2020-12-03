@@ -112,7 +112,7 @@ public class Controller extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-	public static String text2speech() throws FileNotFoundException
+	public static String text2speech() throws IOException
 	{
 		String p = "Puerta";
 		TextToSpeech textToSpeech = new TextToSpeech();
@@ -123,6 +123,10 @@ public class Controller extends HttpServlet {
 	         .accept("audio/wav")
 	         .voice("en-US_AllisonVoice")
 	         .build();
+	       InputStream inputStream =
+	       textToSpeech.synthesize(synthesizeOptions).execute();
+	       InputStream in = WaveUtils.reWriteWaveHeader(inputStream);
+
 		return p;
 	}
 	public static String text2speech2() throws FileNotFoundException
