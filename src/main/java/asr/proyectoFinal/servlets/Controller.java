@@ -194,12 +194,15 @@ public class Controller extends HttpServlet {
 	       .build();
 
 	     //Take the parameters and send them to your service for resutls.
-	     AnalysisResults response = service
+	     /*AnalysisResults response = service
 	       .analyze(parameters)
-	       .execute();
+	       .execute();*/
+	     
+	     final AnalysisResults results =
+	    		 service.analyze(parameters).execute();
 
 	     //print the result
-	     System.out.println(response);
+	     System.out.println(results);
 	     //return response.toString();
 	     
 		}
