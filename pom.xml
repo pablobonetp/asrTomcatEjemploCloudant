@@ -104,11 +104,11 @@
 	    <version>2.8.6</version>
 	</dependency>
 	
-	<dependency>
-	<groupId>com.ibm.watson.developer_cloud</groupId>
-	<artifactId>text-to-speech</artifactId>
-	<version>3.7.0</version>
-	</dependency>
+<dependency>
+	<groupId>com.ibm.watson</groupId>
+	<artifactId>ibm-watson</artifactId>
+	<version>8.6.3</version>
+</dependency>
 
   </dependencies>
 

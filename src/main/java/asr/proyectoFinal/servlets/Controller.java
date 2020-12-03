@@ -27,15 +27,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ibm.cloud.sdk.core.security.Authenticator;
 import com.ibm.cloud.sdk.core.security.IamAuthenticator;
-import com.ibm.watson.developer_cloud.text_to_speech.v1.TextToSpeech;
-import com.ibm.watson.developer_cloud.text_to_speech.v1.model.AudioFormat;
-import com.ibm.watson.developer_cloud.text_to_speech.v1.model.Voice;
 import com.ibm.watson.language_translator.v3.LanguageTranslator;
 import com.ibm.watson.language_translator.v3.model.TranslateOptions;
 import com.ibm.watson.language_translator.v3.model.TranslationResult;
-
 import asr.proyectoFinal.dao.CloudantPalabraStore;
 import asr.proyectoFinal.dominio.Palabra;
+import com.ibm.watson.developer_cloud.text_to_speech.v1.TextToSpeech;
+import com.ibm.watson.developer_cloud.text_to_speech.v1.model.SynthesizeOptions;
+import com.ibm.watson.developer_cloud.text_to_speech.v1.util.WaveUtils;
+
 
 
 
@@ -105,13 +105,37 @@ public class Controller extends HttpServlet {
 	
 	public static void text2speech() throws FileNotFoundException
 	{	
-		final String text = "IBM Watson Developer Cloud";
-		TextToSpeech service = new TextToSpeech();
-	    service.setApiKey("F4jIJXlZggSryeWNMuXrtY1sgdo-dSg99_cczg31Yhx5");
-	    
-	    
-	    InputStream result = service.synthesize(text, Voice.EN_LISA, AudioFormat.WAV).execute();
-	    writeInputStreamToOutputStream(result, new FileOutputStream("target/asroutput.wav"));
+		TextToSpeech textToSpeech = new TextToSpeech();
+		textToSpeech.setApiKey("_BY39GCbpkCbcW09LfMVbvluQtVYU2vDAQ5s1pP1ZKFL");
+	     //textToSpeech.setUsernameAndPassword(username, password);
+
+	     try {
+	       SynthesizeOptions synthesizeOptions =
+	       new SynthesizeOptions.Builder()
+	         .text("Hello World!")
+	         .accept("audio/wav")
+	         .voice("en-US_AllisonVoice")
+	         .build();
+
+	       InputStream inputStream =
+	       textToSpeech.synthesize(synthesizeOptions).execute();
+	       InputStream in = WaveUtils.reWriteWaveHeader(inputStream);
+
+	       OutputStream out = new FileOutputStream("testasr.wav");
+	       byte[] buffer = new byte[1024];
+	       int length;
+	       while ((length = in.read(buffer)) > 0) {
+	       out.write(buffer, 0, length);
+	       }
+
+	       out.close();
+	       in.close();
+	       inputStream.close();
+	      } catch (IOException e) {
+	        e.printStackTrace();
+	      }
+
+	
 	}
 	
 	
@@ -150,28 +174,5 @@ public class Controller extends HttpServlet {
 			traducciones.get(0).getAsJsonObject().get("translation").getAsString();
 			return traduccionPrimera;
 			}
-	
-	private static void writeInputStreamToOutputStream(InputStream inputStream, OutputStream outputStream) {
-	    try {
-	      try {
-	        final byte[] buffer = new byte[1024];
-	        int read;
-
-	        while ((read = inputStream.read(buffer)) != -1) {
-	          outputStream.write(buffer, 0, read);
-	        }
-
-	        outputStream.flush();
-	      } catch (final Exception e) {
-	        e.printStackTrace();
-	      } finally {
-	        outputStream.close();
-	        inputStream.close();
-	      }
-	    } catch (final Exception e) {
-	      e.printStackTrace();
-	    }
-	  }
-
 
 }
