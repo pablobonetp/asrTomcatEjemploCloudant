@@ -119,7 +119,14 @@ public class Controller extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	public static void naturalunderstanding() {
+	public static void naturalunderstanding() 
+	{
+		NaturalLanguageUnderstanding service = new NaturalLanguageUnderstanding("2018-03-16");
+		service.setApiKey("feevSExoX_L5S3GLqmQybGWNnjUgcb7X6bYf1voK0oP9");
+	}
+	
+	
+	public static void naturalunderstanding2() {
 	
 	/*NaturalLanguageUnderstanding service = new NaturalLanguageUnderstanding(
 	           "2018-03-16",
