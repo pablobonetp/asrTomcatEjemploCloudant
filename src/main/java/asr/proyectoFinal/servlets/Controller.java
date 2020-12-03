@@ -103,10 +103,10 @@ public class Controller extends HttpServlet {
 					//Palabra palabra1 = new Palabra();
 					//String parametro1 = request.getParameter("palabra");
 					//palabra1.setName(text2speech());
-					//String s = naturalunderstanding();
-					naturalunderstanding();
+					String s = naturalunderstanding();
+					//naturalunderstanding();
 					out.println(String.format("Almacenada la palabra"));
-					//out.print(s);
+					out.print(s);
 				break;
 		}
 		out.println("</html>");
@@ -119,10 +119,15 @@ public class Controller extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	public static void naturalunderstanding() 
+	public static String naturalunderstanding() 
 	{
 		NaturalLanguageUnderstanding service = new NaturalLanguageUnderstanding("2018-03-16");
 		service.setApiKey("feevSExoX_L5S3GLqmQybGWNnjUgcb7X6bYf1voK0oP9");
+		
+		String text = "IBM is an American multinational technology " +
+			       "company headquartered in Armonk, New York, " +
+			       "United States, with operations in over 170 countries.";
+		return text;
 	}
 	
 	
