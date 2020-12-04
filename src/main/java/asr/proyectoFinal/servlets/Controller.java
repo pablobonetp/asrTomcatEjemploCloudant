@@ -18,9 +18,11 @@ import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.language_translator.v3.LanguageTranslator;
 import com.ibm.watson.language_translator.v3.model.TranslateOptions;
 import com.ibm.watson.language_translator.v3.model.TranslationResult;
-import com.ibm.watson.natural_language_classifier.v1.NaturalLanguageClassifier;
-import com.ibm.watson.natural_language_classifier.v1.model.Classification;
-import com.ibm.watson.natural_language_classifier.v1.model.ClassifyOptions;
+import com.ibm.watson.natural_language_understanding.v1.NaturalLanguageUnderstanding;
+import com.ibm.watson.natural_language_understanding.v1.model.AnalysisResults;
+import com.ibm.watson.natural_language_understanding.v1.model.AnalyzeOptions;
+import com.ibm.watson.natural_language_understanding.v1.model.EntitiesOptions;
+import com.ibm.watson.natural_language_understanding.v1.model.Features;
 
 import asr.proyectoFinal.dao.CloudantPalabraStore;
 import asr.proyectoFinal.dominio.Palabra;
@@ -78,7 +80,7 @@ public class Controller extends HttpServlet {
 				}
 				break;
 				case "/text2speech":
-					String s = nlc();
+					String s = nlu();
 					out.println(String.format("Almacenada la palabra"));
 					out.print(s);
 				break;
@@ -93,19 +95,26 @@ public class Controller extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	public static String nlc()
+	public static String nlu()
 	{
-		Authenticator authenticator = new IamAuthenticator("<iam_api_key>");
-		NaturalLanguageClassifier service = new NaturalLanguageClassifier(authenticator);
+		Authenticator authenticator = new IamAuthenticator("VVoEd09PiuaSTximkbxECtkp7VeCi6WACus-2aOfbLRd");
+		NaturalLanguageUnderstanding service = new NaturalLanguageUnderstanding("2019-07-12", authenticator);
 
-		ClassifyOptions classifyOptions = new ClassifyOptions.Builder()
-		  .classifierId("<classifier-id>")
-		  .text("Is it sunny?")
+		EntitiesOptions entities = new EntitiesOptions.Builder()
+		  .sentiment(true)
+		  .limit(1L)
+		  .build();
+		Features features = new Features.Builder()
+		  .entities(entities)
+		  .build();
+		AnalyzeOptions parameters = new AnalyzeOptions.Builder()
+		  .url("www.cnn.com")
+		  .features(features)
 		  .build();
 
-		Classification classification = service.classify(classifyOptions).execute().getResult();
-		return classification.toString();
-		//System.out.println(classification);
+		AnalysisResults results = service.analyze(parameters).execute().getResult();
+		System.out.println(results);
+		return results.toString();
 	}
 	
 	public static String translate(String palabra, String sourceModel, String destModel,
