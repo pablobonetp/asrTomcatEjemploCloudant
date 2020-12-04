@@ -111,7 +111,7 @@ public class Controller extends HttpServlet {
 				break;
 				case "/text2speech":
 				try {
-					String s = text2speech();
+					String s = text2speech("prueba1asr");
 					out.println(String.format("Almacenada la palabra"));
 					out.print(s);
 				} catch (InterruptedException e) {
@@ -134,7 +134,7 @@ public class Controller extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	public static String text2speech() throws InterruptedException, IOException
+	public static String text2speech(String audio) throws InterruptedException, IOException
 	{	
 		IamAuthenticator authenticator = new IamAuthenticator("UBByl754umLk3bOp81b-A0k5_Qqla5mXI7xr8BikwLKB");
 		TextToSpeech textToSpeech = new TextToSpeech(authenticator);
@@ -154,7 +154,7 @@ public class Controller extends HttpServlet {
 		       textToSpeech.synthesize(synthesizeOptions).execute().getResult();
 		       InputStream in = WaveUtils.reWriteWaveHeader(inputStream);
 
-		       OutputStream out = new FileOutputStream("asrtest.wav");
+		       OutputStream out = new FileOutputStream(audio + ".wav");
 		       byte[] buffer = new byte[1024];
 		       int length;
 		       while ((length = in.read(buffer)) > 0) {
