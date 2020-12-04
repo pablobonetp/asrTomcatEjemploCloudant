@@ -1,6 +1,7 @@
 package asr.proyectoFinal.servlets;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -18,15 +19,42 @@ import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.language_translator.v3.LanguageTranslator;
 import com.ibm.watson.language_translator.v3.model.TranslateOptions;
 import com.ibm.watson.language_translator.v3.model.TranslationResult;
-
-import com.ibm.watson.natural_language_understanding.v1.NaturalLanguageUnderstanding;
-import com.ibm.watson.natural_language_understanding.v1.model.AnalysisResults;
-import com.ibm.watson.natural_language_understanding.v1.model.AnalyzeOptions;
-import com.ibm.watson.natural_language_understanding.v1.model.EntitiesOptions;
-import com.ibm.watson.natural_language_understanding.v1.model.Features;
+import com.ibm.watson.text_to_speech.v1.TextToSpeech;
+import com.ibm.watson.text_to_speech.v1.model.SynthesizeOptions;
 
 import asr.proyectoFinal.dao.CloudantPalabraStore;
 import asr.proyectoFinal.dominio.Palabra;
+
+import com.ibm.cloud.sdk.core.http.HttpMediaType;
+import com.ibm.cloud.sdk.core.security.Authenticator;
+import com.ibm.cloud.sdk.core.security.IamAuthenticator;
+import com.ibm.watson.text_to_speech.v1.model.DeleteUserDataOptions;
+import com.ibm.watson.text_to_speech.v1.model.GetPronunciationOptions;
+import com.ibm.watson.text_to_speech.v1.model.GetVoiceOptions;
+import com.ibm.watson.text_to_speech.v1.model.MarkTiming;
+import com.ibm.watson.text_to_speech.v1.model.Marks;
+import com.ibm.watson.text_to_speech.v1.model.Pronunciation;
+import com.ibm.watson.text_to_speech.v1.model.SynthesizeOptions;
+import com.ibm.watson.text_to_speech.v1.model.Timings;
+import com.ibm.watson.text_to_speech.v1.model.Voice;
+import com.ibm.watson.text_to_speech.v1.model.Voices;
+import com.ibm.watson.text_to_speech.v1.model.WordTiming;
+import com.ibm.watson.text_to_speech.v1.util.WaveUtils;
+import com.ibm.watson.text_to_speech.v1.websocket.BaseSynthesizeCallback;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 
 
@@ -81,9 +109,17 @@ public class Controller extends HttpServlet {
 				}
 				break;
 				case "/text2speech":
-					String s = nlu();
+				try {
+					text2speech();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 					out.println(String.format("Almacenada la palabra"));
-					out.print(s);
+					//out.print(s);
 				break;
 		}
 		out.println("</html>");
@@ -96,26 +132,44 @@ public class Controller extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	public static String nlu()
+	public static void text2speech() throws InterruptedException, IOException
 	{
-		Authenticator authenticator = new IamAuthenticator("VVoEd09PiuaSTximkbxECtkp7VeCi6WACus-2aOfbLRd");
-		NaturalLanguageUnderstanding service = new NaturalLanguageUnderstanding("2019-07-12", authenticator);
+		Authenticator authenticator = new IamAuthenticator("UBByl754umLk3bOp81b-A0k5_Qqla5mXI7xr8BikwLKB");
+		TextToSpeech service = new TextToSpeech(authenticator);
 
-		EntitiesOptions entities = new EntitiesOptions.Builder()
-		  .sentiment(true)
-		  .limit(1L)
-		  .build();
-		Features features = new Features.Builder()
-		  .entities(entities)
-		  .build();
-		AnalyzeOptions parameters = new AnalyzeOptions.Builder()
-		  .url("www.cnn.com")
-		  .features(features)
+		String text = "It's beginning to look a lot like Christmas";
+		SynthesizeOptions synthesizeOptions = new SynthesizeOptions.Builder()
+		  .text(text)
+		  //.accept(SynthesizeOptions.Accept.AUDIO_OGG_CODECS_OPUS)
+		  .accept(HttpMediaType.AUDIO_WAV)
 		  .build();
 
-		AnalysisResults results = service.analyze(parameters).execute().getResult();
-		System.out.println(results);
-		return results.toString();
+		// a callback is defined to handle certain events, like an audio transmission or a timing marker
+		// in this case, we'll build up a byte array of all the received bytes to build the resulting file
+		final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		service.synthesizeUsingWebSocket(synthesizeOptions, new BaseSynthesizeCallback() {
+		  @Override
+		  public void onAudioStream(byte[] bytes) {
+		    // append to our byte array
+		    try {
+		      byteArrayOutputStream.write(bytes);
+		    } catch (IOException e) {
+		      e.printStackTrace();
+		    }
+		  }
+		});
+
+		// quick way to wait for synthesis to complete, since synthesizeUsingWebSocket() runs asynchronously
+		Thread.sleep(5000);
+
+		// create file with audio data
+		String filename = "synthesize_websocket_test.ogg";
+		OutputStream fileOutputStream = new FileOutputStream(filename);
+		byteArrayOutputStream.writeTo(fileOutputStream);
+
+		// clean up
+		byteArrayOutputStream.close();
+		fileOutputStream.close();
 	}
 	
 	public static String translate(String palabra, String sourceModel, String destModel,
