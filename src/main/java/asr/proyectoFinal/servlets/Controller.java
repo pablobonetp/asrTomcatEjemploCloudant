@@ -18,6 +18,9 @@ import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.language_translator.v3.LanguageTranslator;
 import com.ibm.watson.language_translator.v3.model.TranslateOptions;
 import com.ibm.watson.language_translator.v3.model.TranslationResult;
+import com.ibm.watson.natural_language_classifier.v1.NaturalLanguageClassifier;
+import com.ibm.watson.natural_language_classifier.v1.model.Classification;
+import com.ibm.watson.natural_language_classifier.v1.model.ClassifyOptions;
 
 import asr.proyectoFinal.dao.CloudantPalabraStore;
 import asr.proyectoFinal.dominio.Palabra;
@@ -75,8 +78,9 @@ public class Controller extends HttpServlet {
 				}
 				break;
 				case "/text2speech":
+					String s = nlc();
 					out.println(String.format("Almacenada la palabra"));
-					//out.print(s);
+					out.print(s);
 				break;
 		}
 		out.println("</html>");
@@ -87,6 +91,21 @@ public class Controller extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
+	}
+	
+	public static String nlc()
+	{
+		Authenticator authenticator = new IamAuthenticator("<iam_api_key>");
+		NaturalLanguageClassifier service = new NaturalLanguageClassifier(authenticator);
+
+		ClassifyOptions classifyOptions = new ClassifyOptions.Builder()
+		  .classifierId("<classifier-id>")
+		  .text("Is it sunny?")
+		  .build();
+
+		Classification classification = service.classify(classifyOptions).execute().getResult();
+		return classification.toString();
+		//System.out.println(classification);
 	}
 	
 	public static String translate(String palabra, String sourceModel, String destModel,
