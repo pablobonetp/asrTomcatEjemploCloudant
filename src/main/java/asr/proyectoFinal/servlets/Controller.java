@@ -111,6 +111,8 @@ public class Controller extends HttpServlet {
 				case "/text2speech":
 				try {
 					text2speech();
+					out.println(String.format("Almacenada la palabra"));
+					//out.print(s);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -118,8 +120,7 @@ public class Controller extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-					out.println(String.format("Almacenada la palabra"));
-					//out.print(s);
+					
 				break;
 		}
 		out.println("</html>");
