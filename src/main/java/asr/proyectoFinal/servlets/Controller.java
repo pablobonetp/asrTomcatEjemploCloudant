@@ -110,9 +110,9 @@ public class Controller extends HttpServlet {
 				break;
 				case "/text2speech":
 				try {
-					text2speech();
+					String s = text2speech();
 					out.println(String.format("Almacenada la palabra"));
-					//out.print(s);
+					out.print(s);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -133,8 +133,9 @@ public class Controller extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	public static void text2speech() throws InterruptedException, IOException
-	{
+	public static String text2speech() throws InterruptedException, IOException
+	{	
+		String s = "Mal";
 		Authenticator authenticator = new IamAuthenticator("UBByl754umLk3bOp81b-A0k5_Qqla5mXI7xr8BikwLKB");
 		TextToSpeech service = new TextToSpeech(authenticator);
 
@@ -154,6 +155,7 @@ public class Controller extends HttpServlet {
 		    // append to our byte array
 		    try {
 		      byteArrayOutputStream.write(bytes);
+		      
 		    } catch (IOException e) {
 		      e.printStackTrace();
 		    }
@@ -162,15 +164,16 @@ public class Controller extends HttpServlet {
 
 		// quick way to wait for synthesis to complete, since synthesizeUsingWebSocket() runs asynchronously
 		Thread.sleep(5000);
-
+		s = "Bien";
 		// create file with audio data
-		String filename = "synthesize_websocket_test.ogg";
+		String filename = "asraudio.wav";
 		OutputStream fileOutputStream = new FileOutputStream(filename);
 		byteArrayOutputStream.writeTo(fileOutputStream);
 
 		// clean up
 		byteArrayOutputStream.close();
 		fileOutputStream.close();
+		return s;
 	}
 	
 	public static String translate(String palabra, String sourceModel, String destModel,
