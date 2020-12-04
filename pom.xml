@@ -106,7 +106,7 @@
 	
 	<dependency>
 	  <groupId>com.ibm.watson</groupId>
-	  <artifactId>natural-language-classifier</artifactId>
+	  <artifactId>text-to-speech</artifactId>
 	  <version>8.6.3</version>
 	</dependency>
 	
