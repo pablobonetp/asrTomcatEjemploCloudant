@@ -26,6 +26,7 @@ import asr.proyectoFinal.dao.CloudantPalabraStore;
 import asr.proyectoFinal.dominio.Palabra;
 
 import com.ibm.cloud.sdk.core.http.HttpMediaType;
+import com.ibm.cloud.sdk.core.http.Response;
 import com.ibm.cloud.sdk.core.security.Authenticator;
 import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.text_to_speech.v1.model.DeleteUserDataOptions;
@@ -135,45 +136,39 @@ public class Controller extends HttpServlet {
 	
 	public static String text2speech() throws InterruptedException, IOException
 	{	
-		String s = "Mal";
-		Authenticator authenticator = new IamAuthenticator("UBByl754umLk3bOp81b-A0k5_Qqla5mXI7xr8BikwLKB");
-		TextToSpeech service = new TextToSpeech(authenticator);
+		IamAuthenticator authenticator = new IamAuthenticator("UBByl754umLk3bOp81b-A0k5_Qqla5mXI7xr8BikwLKB");
+		TextToSpeech textToSpeech = new TextToSpeech(authenticator);
+		textToSpeech.setServiceUrl("https://api.eu-gb.text-to-speech.watson.cloud.ibm.com/instances/ff6d5e62-18b7-4b80-a402-951e9825c710");
 
 		String text = "It's beginning to look a lot like Christmas";
-		SynthesizeOptions synthesizeOptions = new SynthesizeOptions.Builder()
-		  .text(text)
-		  //.accept(SynthesizeOptions.Accept.AUDIO_OGG_CODECS_OPUS)
-		  .accept(HttpMediaType.AUDIO_WAV)
-		  .build();
+		
+		 try {
+		       SynthesizeOptions synthesizeOptions =
+		       new SynthesizeOptions.Builder()
+		         .text("Hello World!")
+		         .accept("audio/wav")
+		         .voice("en-US_AllisonVoice")
+		         .build();
 
-		// a callback is defined to handle certain events, like an audio transmission or a timing marker
-		// in this case, we'll build up a byte array of all the received bytes to build the resulting file
-		final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		service.synthesizeUsingWebSocket(synthesizeOptions, new BaseSynthesizeCallback() {
-		  @Override
-		  public void onAudioStream(byte[] bytes) {
-		    // append to our byte array
-		    try {
-		      byteArrayOutputStream.write(bytes);
-		      
-		    } catch (IOException e) {
-		      e.printStackTrace();
-		    }
-		  }
-		});
+		       InputStream inputStream =
+		       textToSpeech.synthesize(synthesizeOptions).execute().getResult();
+		       InputStream in = WaveUtils.reWriteWaveHeader(inputStream);
 
-		// quick way to wait for synthesis to complete, since synthesizeUsingWebSocket() runs asynchronously
-		Thread.sleep(5000);
-		s = "Bien";
-		// create file with audio data
-		String filename = "asraudio.wav";
-		OutputStream fileOutputStream = new FileOutputStream(filename);
-		byteArrayOutputStream.writeTo(fileOutputStream);
+		       OutputStream out = new FileOutputStream("asrtest.wav");
+		       byte[] buffer = new byte[1024];
+		       int length;
+		       while ((length = in.read(buffer)) > 0) {
+		       out.write(buffer, 0, length);
+		       }
 
-		// clean up
-		byteArrayOutputStream.close();
-		fileOutputStream.close();
-		return s;
+		       out.close();
+		       in.close();
+		       inputStream.close();
+		      } catch (IOException e) {
+		        e.printStackTrace();
+		      }
+
+		return text;
 	}
 	
 	public static String translate(String palabra, String sourceModel, String destModel,
