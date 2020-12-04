@@ -71,11 +71,9 @@ public class Controller extends HttpServlet {
 						palabra.setName(translate(parametro,"es","en",false));
 						store.persist(palabra);
 					    out.println(String.format("Almacenada la palabra: %s", palabra.getName()));
-					    //text2speech("1");
-					    //text2speech();
-					    
 					}
 				}
+				break;
 				case "/text2speech":
 					out.println(String.format("Almacenada la palabra"));
 					//out.print(s);
