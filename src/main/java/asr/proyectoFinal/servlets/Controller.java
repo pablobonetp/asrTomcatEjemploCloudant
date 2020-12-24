@@ -112,8 +112,10 @@ public class Controller extends HttpServlet {
 				case "/text2speech":
 				try {
 					String s = text2speech("prueba1asr");
+					String texto = request.getParameter("texto");
 					out.println(String.format("Almacenada la palabra"));
 					out.print(s);
+					out.print(texto);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -136,18 +138,18 @@ public class Controller extends HttpServlet {
 	
 	public static String text2speech(String audio) throws InterruptedException, IOException
 	{	
-		IamAuthenticator authenticator = new IamAuthenticator("UBByl754umLk3bOp81b-A0k5_Qqla5mXI7xr8BikwLKB");
+		IamAuthenticator authenticator = new IamAuthenticator("4xc8LuyR92GhmrytR_cowA6Vca8300IB1xYkIcaS9tdR");
 		TextToSpeech textToSpeech = new TextToSpeech(authenticator);
-		textToSpeech.setServiceUrl("https://api.eu-gb.text-to-speech.watson.cloud.ibm.com/instances/ff6d5e62-18b7-4b80-a402-951e9825c710");
+		textToSpeech.setServiceUrl("https://api.eu-gb.text-to-speech.watson.cloud.ibm.com/instances/14bc1bfe-4a1e-465d-9038-9ef796776098");
 
 		String text = "It's beginning to look a lot like Christmas";
 		
 		 try {
 		       SynthesizeOptions synthesizeOptions =
 		       new SynthesizeOptions.Builder()
-		         .text("Hello World!")
+		         .text(text)
 		         .accept("audio/wav")
-		         .voice("en-US_AllisonVoice")
+		         .voice("en-US_AllisonV3Voice")
 		         .build();
 
 		       InputStream inputStream =
