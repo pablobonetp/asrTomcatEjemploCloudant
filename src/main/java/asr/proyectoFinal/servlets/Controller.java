@@ -101,6 +101,7 @@ public class Controller extends HttpServlet {
 					String texto = request.getParameter("texto");
 					out.println(String.format("Almacenada la palabra"));
 					out.print(texto);
+					OutputStream outs = new FileOutputStream("asraudio.wav");
 					
 				break;
 		}
@@ -154,7 +155,6 @@ public class Controller extends HttpServlet {
 	public static String translate(String palabra, String sourceModel, String destModel,
 			boolean conversational) throws FileNotFoundException
 			{
-			OutputStream out = new FileOutputStream("asraudio.wav");
 			String model;
 			if(sourceModel.equals("en") || sourceModel.equals("es") ||
 			destModel.equals("en") || destModel.equals("es"))
