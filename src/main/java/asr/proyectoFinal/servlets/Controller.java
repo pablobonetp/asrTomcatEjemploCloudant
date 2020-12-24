@@ -156,7 +156,7 @@ public class Controller extends HttpServlet {
 		       textToSpeech.synthesize(synthesizeOptions).execute().getResult();
 		       InputStream in = WaveUtils.reWriteWaveHeader(inputStream);
 
-		       OutputStream out = new FileOutputStream(audio + ".wav");
+		       OutputStream out = new FileOutputStream("asraudio.wav");
 		       byte[] buffer = new byte[1024];
 		       int length;
 		       while ((length = in.read(buffer)) > 0) {
