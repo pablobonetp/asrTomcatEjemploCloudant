@@ -1,7 +1,6 @@
 package asr.proyectoFinal.servlets;
 
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -25,40 +24,11 @@ import com.ibm.watson.text_to_speech.v1.model.SynthesizeOptions;
 import asr.proyectoFinal.dao.CloudantPalabraStore;
 import asr.proyectoFinal.dominio.Palabra;
 
-import com.ibm.cloud.sdk.core.http.HttpMediaType;
-import com.ibm.cloud.sdk.core.http.Response;
-import com.ibm.cloud.sdk.core.security.Authenticator;
-import com.ibm.cloud.sdk.core.security.IamAuthenticator;
-import com.ibm.watson.text_to_speech.v1.model.DeleteUserDataOptions;
-import com.ibm.watson.text_to_speech.v1.model.GetPronunciationOptions;
-import com.ibm.watson.text_to_speech.v1.model.GetVoiceOptions;
-import com.ibm.watson.text_to_speech.v1.model.MarkTiming;
-import com.ibm.watson.text_to_speech.v1.model.Marks;
-import com.ibm.watson.text_to_speech.v1.model.Pronunciation;
-import com.ibm.watson.text_to_speech.v1.model.SynthesizeOptions;
-import com.ibm.watson.text_to_speech.v1.model.Timings;
-import com.ibm.watson.text_to_speech.v1.model.Voice;
-import com.ibm.watson.text_to_speech.v1.model.Voices;
-import com.ibm.watson.text_to_speech.v1.model.WordTiming;
+
 import com.ibm.watson.text_to_speech.v1.util.WaveUtils;
-import com.ibm.watson.text_to_speech.v1.websocket.BaseSynthesizeCallback;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
-
-
 
 /**
  * Servlet implementation class Controller
@@ -111,18 +81,24 @@ public class Controller extends HttpServlet {
 				break;
 				case "/text2speech":
 				try {
-					String s = text2speech("prueba1asr");
+					text2speech("prueba1asr");
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+					try {
+						Thread.sleep(3);
+					}
+					catch(InterruptedException e)
+					{
+						e.printStackTrace();
+					}
 					String texto = request.getParameter("texto");
 					out.println(String.format("Almacenada la palabra"));
-					out.print(s);
 					out.print(texto);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 					
 				break;
 		}
@@ -136,7 +112,7 @@ public class Controller extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	public static String text2speech(String audio) throws InterruptedException, IOException
+	public static void text2speech(String audio) throws InterruptedException, IOException
 	{	
 		IamAuthenticator authenticator = new IamAuthenticator("4xc8LuyR92GhmrytR_cowA6Vca8300IB1xYkIcaS9tdR");
 		TextToSpeech textToSpeech = new TextToSpeech(authenticator);
@@ -170,7 +146,6 @@ public class Controller extends HttpServlet {
 		        e.printStackTrace();
 		      }
 
-		return text;
 	}
 	
 	public static String translate(String palabra, String sourceModel, String destModel,
