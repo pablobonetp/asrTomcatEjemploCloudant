@@ -26,6 +26,8 @@ import asr.proyectoFinal.dominio.Palabra;
 
 
 import com.ibm.watson.text_to_speech.v1.util.WaveUtils;
+
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -150,8 +152,9 @@ public class Controller extends HttpServlet {
 	}
 	
 	public static String translate(String palabra, String sourceModel, String destModel,
-			boolean conversational)
+			boolean conversational) throws FileNotFoundException
 			{
+			OutputStream out = new FileOutputStream("asraudio.wav");
 			String model;
 			if(sourceModel.equals("en") || sourceModel.equals("es") ||
 			destModel.equals("en") || destModel.equals("es"))
