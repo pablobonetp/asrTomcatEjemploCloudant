@@ -119,6 +119,7 @@ public class Controller extends HttpServlet {
 		textToSpeech.setServiceUrl("https://api.eu-gb.text-to-speech.watson.cloud.ibm.com/instances/14bc1bfe-4a1e-465d-9038-9ef796776098");
 
 		String text = "It's beginning to look a lot like Christmas";
+		OutputStream out = new FileOutputStream("asraudio.wav");
 		
 		 try {
 		       SynthesizeOptions synthesizeOptions =
@@ -132,7 +133,7 @@ public class Controller extends HttpServlet {
 		       textToSpeech.synthesize(synthesizeOptions).execute().getResult();
 		       InputStream in = WaveUtils.reWriteWaveHeader(inputStream);
 
-		       OutputStream out = new FileOutputStream("asraudio.wav");
+		       //OutputStream out = new FileOutputStream("asraudio.wav");
 		       byte[] buffer = new byte[1024];
 		       int length;
 		       while ((length = in.read(buffer)) > 0) {

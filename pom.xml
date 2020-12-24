@@ -107,7 +107,7 @@
 	<dependency>
 	  <groupId>com.ibm.watson</groupId>
 	  <artifactId>text-to-speech</artifactId>
-	  <version>8.6.3</version>
+	  <version>8.0.1</version>
 	</dependency>
 	
   </dependencies>
