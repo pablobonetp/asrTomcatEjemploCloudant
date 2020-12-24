@@ -101,7 +101,7 @@ public class Controller extends HttpServlet {
 					String texto = request.getParameter("texto");
 					out.println(String.format("Almacenada la palabra"));
 					out.print(texto);
-					OutputStream outs = new FileOutputStream("asraudio.wav");
+					OutputStream outs = new FileOutputStream("/Users/pablobonet/asraudio.wav");
 					
 				break;
 		}
